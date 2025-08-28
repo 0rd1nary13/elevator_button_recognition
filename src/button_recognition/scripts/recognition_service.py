@@ -81,7 +81,7 @@ class ButtonRecognition:
       return recog_serverResponse(None)
     start = rospy.get_time()
     if VERBOSE:
-      print 'received image of type: "%s"' % image.format
+      print('received image of type: "%s"' % image.format)
     np_arr = np.fromstring(image.data, np.uint8)
     image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
     # image_np = cv2.cvtColor(image_cv, cv2.COLOR_BGR2RGB)

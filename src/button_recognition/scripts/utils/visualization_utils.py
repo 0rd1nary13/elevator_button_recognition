@@ -86,7 +86,7 @@ def save_image_array_as_png(image, output_path):
     output_path: path to which image should be written.
   """
   image_pil = Image.fromarray(np.uint8(image)).convert('RGB')
-  with tf.gfile.Open(output_path, 'w') as fid:
+  with open(output_path, 'w') as fid:
     image_pil.save(fid, 'PNG')
 
 
@@ -191,7 +191,11 @@ def draw_bounding_box_on_image(image,
   # If the total height of the display strings added to the top of the bounding
   # box exceeds the top of the image, stack the strings below the bounding box
   # instead of above.
-  display_str_heights = [font.getsize(ds)[1] for ds in display_str_list]
+  # Fix for newer Pillow versions
+  try:
+    display_str_heights = [font.getbbox(ds)[3] - font.getbbox(ds)[1] for ds in display_str_list]
+  except AttributeError:
+    display_str_heights = [font.getsize(ds)[1] for ds in display_str_list]
   # Each display_str has a top and bottom margin of 0.05x.
   total_display_str_height = (1 + 2 * 0.05) * sum(display_str_heights)
   if top > total_display_str_height:
@@ -202,8 +206,15 @@ def draw_bounding_box_on_image(image,
   for display_str in display_str_list[::-1]:
     detection_char = display_str.split('_')[0]
     recognition_char = display_str.split('_')[-1]
-    recog_width, recog_height = font.getsize(recognition_char)
-    text_width, text_height = font.getsize(detection_char)
+    # Fix for newer Pillow versions
+    try:
+      bbox = font.getbbox(recognition_char)
+      recog_width, recog_height = bbox[2] - bbox[0], bbox[3] - bbox[1]
+      bbox = font.getbbox(detection_char)
+      text_width, text_height = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    except AttributeError:
+      recog_width, recog_height = font.getsize(recognition_char)
+      text_width, text_height = font.getsize(detection_char)
     margin = np.ceil(0.05 * text_height)
     draw.rectangle(
         [(left, text_bottom - text_height - 2 * margin),

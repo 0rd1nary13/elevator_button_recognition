@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import sys
 import cv2
 import rospy
 import numpy as np
@@ -60,8 +61,8 @@ class ButtonTracker:
           str_disp += char_2
         char_list.append(str_disp)
       return box_list, score_list, class_list, char_list
-    except rospy.ServiceException, e:
-      print "Service call failed: {}".format(e)
+    except rospy.ServiceException as e:
+      print("Service call failed: {}".format(e))
 
 
 def read_video(video_name):
@@ -74,8 +75,8 @@ def read_video(video_name):
   rospy.loginfo('Initialize the tracker ...')
   button_tracker = ButtonTracker()
   (state, frame) = video.read()
-  img_height = frame.shape[0] / 2
-  img_width = frame.shape[1] / 2
+  img_height = frame.shape[0] // 2
+  img_width = frame.shape[1] // 2
   frame = cv2.resize(frame, dsize=(img_width, img_height))
   (boxes, scores, classes, chars) = button_tracker.call_for_service(frame)
   button_tracker.init_tracker(frame, boxes)
@@ -84,7 +85,7 @@ def read_video(video_name):
   while state:
     counter += 1
     (state, frame) = video.read()
-    frame = cv2.resize(frame, dsize=(img_width, img_height))
+    frame = cv2.resize(frame, dsize=(int(img_width), int(img_height)))
     if not state:
       sys.exit()
     ok, boxes = button_tracker.tracker.update(frame)

@@ -120,23 +120,23 @@ class LabelMapUtilTest(tf.test.TestCase):
         label_map_proto, max_num_classes=3)
     self.assertListEqual([{
         'id': 2,
-        'name': u'cat'
+        'name': 'cat'
     }, {
         'id': 1,
-        'name': u'child'
+        'name': 'child'
     }], categories)
 
   def test_convert_label_map_to_categories_no_label_map(self):
     categories = label_map_util.convert_label_map_to_categories(
         None, max_num_classes=3)
     expected_categories_list = [{
-        'name': u'category_1',
+        'name': 'category_1',
         'id': 1
     }, {
-        'name': u'category_2',
+        'name': 'category_2',
         'id': 2
     }, {
-        'name': u'category_3',
+        'name': 'category_3',
         'id': 3
     }]
     self.assertListEqual(expected_categories_list, categories)
@@ -146,13 +146,13 @@ class LabelMapUtilTest(tf.test.TestCase):
     categories = label_map_util.convert_label_map_to_categories(
         label_map_proto, max_num_classes=3)
     expected_categories_list = [{
-        'name': u'1',
+        'name': '1',
         'id': 1
     }, {
-        'name': u'2',
+        'name': '2',
         'id': 2
     }, {
-        'name': u'3',
+        'name': '3',
         'id': 3
     }]
     self.assertListEqual(expected_categories_list, categories)
@@ -162,24 +162,24 @@ class LabelMapUtilTest(tf.test.TestCase):
     cat_no_offset = label_map_util.convert_label_map_to_categories(
         label_map_proto, max_num_classes=2)
     expected_categories_list = [{
-        'name': u'1',
+        'name': '1',
         'id': 1
     }, {
-        'name': u'2',
+        'name': '2',
         'id': 2
     }]
     self.assertListEqual(expected_categories_list, cat_no_offset)
 
   def test_create_category_index(self):
-    categories = [{'name': u'1', 'id': 1}, {'name': u'2', 'id': 2}]
+    categories = [{'name': '1', 'id': 1}, {'name': '2', 'id': 2}]
     category_index = label_map_util.create_category_index(categories)
     self.assertDictEqual({
         1: {
-            'name': u'1',
+            'name': '1',
             'id': 1
         },
         2: {
-            'name': u'2',
+            'name': '2',
             'id': 2
         }
     }, category_index)
@@ -203,11 +203,11 @@ class LabelMapUtilTest(tf.test.TestCase):
         label_map_path)
     self.assertDictEqual({
         1: {
-            'name': u'dog',
+            'name': 'dog',
             'id': 1
         },
         2: {
-            'name': u'cat',
+            'name': 'cat',
             'id': 2
         }
     }, category_index)
